@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bec0d3f9ffea0b49a22b99d9efa777c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allVolumes: []
   gridSize: 10
   edgeRange: 2.45
   nodeSpread: 2

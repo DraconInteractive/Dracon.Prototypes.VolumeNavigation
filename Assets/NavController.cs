@@ -38,8 +38,8 @@ public class NavController : MonoBehaviour {
     {
         if (storage != null)
         {
-            storage.nodes = new List<Node>(allNodes);
-            storage.volumes = new List<NodeVolume>(allVolumes);
+            storage.Nodes = new List<Node>(allNodes);
+            storage.Volumes = new List<NodeVolume>(allVolumes);
         }
     }
     [ExecuteInEditMode]
@@ -47,8 +47,8 @@ public class NavController : MonoBehaviour {
     {
         if (storage != null)
         {
-            allNodes = storage.nodes;
-            allVolumes = storage.volumes;
+            allNodes = new List<Node>(storage.Nodes);
+            allVolumes = new List<NodeVolume>(storage.Volumes);
         }
         else
         {
@@ -186,39 +186,48 @@ public class NavController : MonoBehaviour {
         }
         return neighbours;
     }
+    
     void OnDrawGizmos ()
     {
+        /*
         if (allNodes.Count > 0)
         {
+            
             foreach (Node n in allNodes)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawWireSphere(n.position, 0.1f);
-                /*
+                
                 foreach (Edge edge in n.edges)
                 {
                     Gizmos.color = Color.black;
                     Gizmos.DrawLine(n.position, edge.endNode.position);
                 }
-                */
+                
             }
-
-            foreach (NodeVolume volume in allVolumes)
-            {
-                if (volume.obstructed)
-                {
-                    Gizmos.color = new Color(1, 0, 0, 0.5f);
-                    Gizmos.DrawCube(volume.centre, Vector3.one * nodeSpread);
-                }
-                else
-                {
-                    Gizmos.color = new Color(0, 0, 1, 0.1f);
-                }
-
-            }
+            
+            
         }
-        
+        */
+        if (allVolumes == null)
+        {
+            return;
+        }
+        foreach (NodeVolume volume in allVolumes)
+        {
+            if (volume.obstructed)
+            {
+                Gizmos.color = new Color(1, 0, 0, 0.5f);
+                Gizmos.DrawCube(volume.centre, Vector3.one * nodeSpread);
+            }
+            else
+            {
+                Gizmos.color = new Color(0, 0, 1, 0.1f);
+            }
+
+        }
     }
+
 }
 
 public class Node {
@@ -232,6 +241,7 @@ public class Edge
     public Node endNode;
 }
 
+[System.Serializable]
 public class NodeVolume
 {
     public Node[] corners = new Node[8];

@@ -4,7 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "NavStorage", menuName = "Navigation Storage", order = 0)]
 public class NavStorage : ScriptableObject {
-    private List<Node> nodes;
+    public List<Node> nodes;
     public List<NodeVolume> volumes;
 
     public int nodeCount, volumeCount;

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NavController : MonoBehaviour {
+
+    public static NavController c;
     public List<Node> allNodes = new List<Node>();
     public List<NodeVolume> allVolumes = new List<NodeVolume>();
     public int gridSize;
@@ -10,9 +12,16 @@ public class NavController : MonoBehaviour {
     public int nodeSpread;
     public LayerMask obstructionMask;
 
-    public NavStorage storage;
-	// Use this for initialization
-	void Start () {
+    public NavStorage storage, saveTo;
+
+    public bool loadFromSave;
+
+    private void Awake()
+    {
+        c = this;
+    }
+    // Use this for initialization
+    void Start () {
         Do();
 	}
 	
@@ -36,22 +45,32 @@ public class NavController : MonoBehaviour {
     [ContextMenu("Save")]
     public void SaveNav ()
     {
-        if (storage != null)
+        print("Saving");
+        if (saveTo != null)
         {
-            storage.Nodes = new List<Node>(allNodes);
-            storage.Volumes = new List<NodeVolume>(allVolumes);
+            saveTo.Nodes = new List<Node>(allNodes);
+            saveTo.Volumes = new List<NodeVolume>(allVolumes);
+            print("Saved");
         }
+    }
+
+    [ContextMenu("Report")]
+    public void Report ()
+    {
+        print("Nodes: " + allNodes.Count + " | Volumes: " + allVolumes.Count);
     }
     [ExecuteInEditMode]
     IEnumerator DoGeneration ()
     {
-        if (storage != null)
+        if (storage != null && loadFromSave)
         {
-            allNodes = new List<Node>(storage.Nodes);
-            allVolumes = new List<NodeVolume>(storage.Volumes);
+            print("Loading from save");
+            allNodes = new List<Node>(storage.nodes);
+            allVolumes = new List<NodeVolume>(storage.volumes);
         }
         else
         {
+            print("Doing generation");
             yield return StartCoroutine(GenerateNodes());
             yield return StartCoroutine(GenerateEdges());
             yield return StartCoroutine(GenerateVolumes());
@@ -229,13 +248,13 @@ public class NavController : MonoBehaviour {
     }
 
 }
-
+[System.Serializable]
 public class Node {
     public Vector3 position;
     public List<Edge> edges = new List<Edge>();
     public bool obstructed = false;
 }
-
+[System.Serializable]
 public class Edge
 {
     public Node endNode;
